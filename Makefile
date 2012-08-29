@@ -7,6 +7,8 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	-Wuninitialized -Wconversion -Wstrict-prototypes
 CFLAGS := -g -std=c99 -fPIC $(WARNINGS)
 
+CC = cc
+INSTALL = install -s
 
 all: weenick.so weereact.so
 
@@ -26,9 +28,9 @@ clean:
 	rm -f *.o *.so
 
 install:
-	$(INSTALL) -s -m755 weenick.so /usr/lib/weechat/plugins/weenick.so
-	$(INSTALL) -s -m755 weereact.so /usr/lib/weechat/plugins/weereact.so
+	$(INSTALL) -Dm755 weenick.so  $(DESTDIR)/usr/lib/weechat/plugins/weenick.so
+	$(INSTALL) -Dm755 weereact.so $(DESTDIR)/usr/lib/weechat/plugins/weereact.so
 
 uninstall:
-	rm /usr/lib/weechat/plugins/weenick.so
-	rm /usr/lib/weechat/plugins/weereact.so
+	rm $(DESTDIR)/usr/lib/weechat/plugins/weenick.so
+	rm $(DESTDIR)/usr/lib/weechat/plugins/weereact.so

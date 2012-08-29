@@ -8,7 +8,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 CFLAGS := -g -std=c99 -fPIC $(WARNINGS)
 
 CC = cc
-INSTALL = install -s
+INSTALL = install
 
 all: weenick.so weereact.so
 
@@ -28,9 +28,15 @@ clean:
 	rm -f *.o *.so
 
 install:
-	$(INSTALL) -Dm755 weenick.so  $(DESTDIR)/usr/lib/weechat/plugins/weenick.so
-	$(INSTALL) -Dm755 weereact.so $(DESTDIR)/usr/lib/weechat/plugins/weereact.so
+	$(INSTALL) -s -Dm755 weenick.so  $(DESTDIR)/usr/lib/weechat/plugins/weenick.so
+	$(INSTALL) -s -Dm755 weereact.so $(DESTDIR)/usr/lib/weechat/plugins/weereact.so
+	$(INSTALL) -Dm644 AUTHORS        $(DESTDIR)/usr/share/doc/weechat/weeplugins/AUTHORS
+	$(INSTALL) -Dm644 COPYING        $(DESTDIR)/usr/share/doc/weechat/weeplugins/COPYING
+	$(INSTALL) -Dm644 README.md      $(DESTDIR)/usr/share/doc/weechat/weeplugins/README.md
+	$(INSTALL) -Dm644 weereact.conf  $(DESTDIR)/usr/share/doc/weechat/weeplugins/weereact.conf
 
 uninstall:
 	rm $(DESTDIR)/usr/lib/weechat/plugins/weenick.so
 	rm $(DESTDIR)/usr/lib/weechat/plugins/weereact.so
+	rm -rf $(DESTDIR)/usr/share/doc/weechat/weeplugins
+	rmdir --ignore-fail-on-non-empty $(DESTDIR)/usr/share/doc/weechat

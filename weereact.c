@@ -283,10 +283,12 @@ str_replace (const char *source, const char *replacements[])
             /* make sure there's room */
             if (length + (len_replacement - len_match) >= alloc)
             {
+                char *s = str;
+
                 alloc += len_replacement + 255;
                 if (!(str = realloc (str, sizeof (*str) * alloc)))
                 {
-                    free (str);
+                    free (s);
                     return NULL;
                 }
             }

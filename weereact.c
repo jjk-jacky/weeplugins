@@ -117,15 +117,6 @@ load_config (void)
     char  file[BUF_SIZE];
     char *data;
     
-    snprintf (file, BUF_SIZE, "%s/weereact.conf",
-              weechat_info_get ("weechat_dir", NULL));
-    if (!(data = weechat_file_get_content (file)))
-    {
-        weechat_printf (NULL, "%sCould not load config from %s",
-                        weechat_prefix ("error"), file);
-        return 0;
-    }
-    
     char *s, *e;
     size_t l;
     int linenum = 0;
@@ -136,9 +127,20 @@ load_config (void)
     int nb_used = 0;
     char **cmd = NULL;
     
+    snprintf (file, BUF_SIZE, "%s/weereact.conf",
+              weechat_info_get ("weechat_dir", NULL));
+    if (!(data = weechat_file_get_content (file)))
+    {
+        weechat_printf (NULL, "%sCould not load config from %s",
+                        weechat_prefix ("error"), file);
+        return 0;
+    }
+    
     s = data;
     while ((e = strchr (s, '\n')) || (*s))
     {
+        char *val;
+
         ++linenum;
         if (e)
         {
@@ -170,7 +172,6 @@ load_config (void)
             goto next;
         }
         
-        char *val;
         if (!(val = strchr (s, '=')))
         {
             goto next;
@@ -228,6 +229,7 @@ load_config (void)
     }
     
     free (data);
+    free (cmd);
     return 1;
 }
 
@@ -364,6 +366,7 @@ process_signal (const char *on, const char *to, const char *by,
         {
             if (r->is)
             {
+                const char *rep[6] = { "$on", on, "$to", to, "$by", by };
                 gboolean has_references = FALSE;
                 /* are there back-references needing to be replaced? */
                 if (g_regex_check_replacement (*command, &has_references, NULL)
@@ -383,7 +386,6 @@ process_signal (const char *on, const char *to, const char *by,
                     s = *command;
                 }
                 
-                const char *rep[6] = { "$on", on, "$to", to, "$by", by };
                 if (!(cmd = str_replace (s, rep)))
                 {
                     if (has_references)

@@ -128,7 +128,7 @@ get_buffer (const char *signal, char *server_name)
     /* copy server name if asked for */
     if (server_name)
     {
-        sprintf (server_name, "%s", server + 7);
+        snprintf (server_name, BUF_SIZE, "%s", server + 7);
     }
     
     /* we'll return the found buffer, or NULL if not found */

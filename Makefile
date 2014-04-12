@@ -22,7 +22,7 @@ weenick.so: weenick.o
 	$(CC) $(CFLAGS) -shared -o weenick.so weenick.o
 
 weereact.so: weereact.o
-	$(CC) $(CFLAGS) -shared `pkg-config --libs glib-2.0` -o weereact.so weereact.o
+	$(CC) $(CFLAGS) -shared -o weereact.so weereact.o `pkg-config --libs glib-2.0`
 
 clean:
 	rm -f *.o *.so

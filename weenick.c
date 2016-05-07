@@ -1,8 +1,8 @@
 /**
- * weeplugins - Copyright (C) 2012-2014 Olivier Brunel
+ * weeplugins - Copyright (C) 2012-2016 Olivier Brunel
  *
  * weenick.c
- * Copyright (C) 2012-2014 Olivier Brunel <jjk@jjacky.com>
+ * Copyright (C) 2012-2016 Olivier Brunel <jjk@jjacky.com>
  *
  * This file is part of weeplugins.
  *
@@ -129,7 +129,10 @@ get_buffer (const char *signal, char *server_name)
 }
 
 static int
-in_use_cb (void *data _UNUSED_, const char *signal, const char *type_data _UNUSED_,
+in_use_cb (const void *pointer _UNUSED_,
+           void *data _UNUSED_,
+           const char *signal,
+           const char *type_data _UNUSED_,
            void *signal_data)
 {
     /*  signal          server,irc_in2_433
@@ -181,7 +184,10 @@ in_use_cb (void *data _UNUSED_, const char *signal, const char *type_data _UNUSE
 }
 
 static int
-notice_cb (void *data _UNUSED_, const char *signal, const char *type_data _UNUSED_,
+notice_cb (const void *pointer _UNUSED_,
+           void *data _UNUSED_,
+           const char *signal,
+           const char *type_data _UNUSED_,
            void *_signal_data)
 {
     /*  signal          server,irc_in2_notice
@@ -301,7 +307,10 @@ notice_cb (void *data _UNUSED_, const char *signal, const char *type_data _UNUSE
 }
 
 static int
-welcome_cb (void *data _UNUSED_, const char *signal, const char *type_data _UNUSED_,
+welcome_cb (const void *pointer _UNUSED_,
+            void *data _UNUSED_,
+            const char *signal,
+            const char *type_data _UNUSED_,
             void *signal_data)
 {
     /*  signal          server,irc_in2_001
@@ -392,13 +401,13 @@ weechat_plugin_init (struct t_weechat_plugin *plugin,
 
 
     /* hook to message RPL_WELCOME (001) */
-    weechat_hook_signal ("*,irc_in2_001", &welcome_cb, NULL);
+    weechat_hook_signal ("*,irc_in2_001", &welcome_cb, NULL, NULL);
 
     /* hook to message ERR_NICKNAMEINUSE (433) */
-    weechat_hook_signal ("*,irc_in2_433", &in_use_cb, NULL);
+    weechat_hook_signal ("*,irc_in2_433", &in_use_cb, NULL, NULL);
 
     /* hook to message NOTICE */
-    weechat_hook_signal ("*,irc_in2_notice", &notice_cb, NULL);
+    weechat_hook_signal ("*,irc_in2_notice", &notice_cb, NULL, NULL);
 
     return WEECHAT_RC_OK;
 }

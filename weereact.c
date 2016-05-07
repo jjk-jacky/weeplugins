@@ -1,8 +1,8 @@
 /**
- * weeplugins - Copyright (C) 2012-2014 Olivier Brunel
+ * weeplugins - Copyright (C) 2012-2016 Olivier Brunel
  *
  * weereact.c
- * Copyright (C) 2012-2014 Olivier Brunel <jjk@jjacky.com>
+ * Copyright (C) 2012-2016 Olivier Brunel <jjk@jjacky.com>
  *
  * This file is part of weeplugins.
  *
@@ -363,7 +363,10 @@ process_signal (const char *on, const char *to, const char *by,
 }
 
 static int
-msg_in_cb (void *data _UNUSED_, const char *signal, const char *type_data _UNUSED_,
+msg_in_cb (const void *pointer _UNUSED_,
+           void *data _UNUSED_,
+           const char *signal,
+           const char *type_data _UNUSED_,
            void *signal_data)
 {
     /*  signal          server,irc_in2_PRIVMSG
@@ -446,7 +449,10 @@ msg_in_cb (void *data _UNUSED_, const char *signal, const char *type_data _UNUSE
 }
 
 static int
-msg_out_cb (void *data _UNUSED_, const char *signal, const char *type_data _UNUSED_,
+msg_out_cb (const void *pointer _UNUSED_,
+            void *data _UNUSED_,
+            const char *signal,
+            const char *type_data _UNUSED_,
             void *signal_data)
 {
     /*  signal          server,irc_out_PRIVMSG
@@ -486,8 +492,12 @@ msg_out_cb (void *data _UNUSED_, const char *signal, const char *type_data _UNUS
 }
 
 static int
-tobuffer_cb (void *data _UNUSED_, struct t_gui_buffer *buffer _UNUSED_,
-             int argc, char **argv, char **argv_eol)
+tobuffer_cb (const void *pointer _UNUSED_,
+             void *data _UNUSED_,
+             struct t_gui_buffer *buffer _UNUSED_,
+             int argc,
+             char **argv,
+             char **argv_eol)
 {
     struct t_gui_buffer *dest_buffer;
     char *s;
@@ -514,7 +524,9 @@ tobuffer_cb (void *data _UNUSED_, struct t_gui_buffer *buffer _UNUSED_,
 }
 
 static int
-reload_cb (void *data _UNUSED_, struct t_gui_buffer *buffer _UNUSED_,
+reload_cb (const void *pointer _UNUSED_,
+           void *data _UNUSED_,
+           struct t_gui_buffer *buffer _UNUSED_,
            const char *command _UNUSED_)
 {
     free_react ();
@@ -532,20 +544,20 @@ weechat_plugin_init (struct t_weechat_plugin *plugin,
     load_config ();
 
     /* hook to message PRIVMSG */
-    weechat_hook_signal ("*,irc_in2_privmsg", &msg_in_cb, NULL);
+    weechat_hook_signal ("*,irc_in2_privmsg", &msg_in_cb, NULL, NULL);
 
     /* hook to message PRIVMSG going out */
-    weechat_hook_signal ("*,irc_out_privmsg", &msg_out_cb, NULL);
+    weechat_hook_signal ("*,irc_out_privmsg", &msg_out_cb, NULL, NULL);
 
     /* hook to command reload so we reload our config as well */
-    weechat_hook_command_run ("/reload", &reload_cb, NULL);
+    weechat_hook_command_run ("/reload", &reload_cb, NULL, NULL);
 
     /* hook command tobuffer to send commands to a specific buffer */
     weechat_hook_command ("tobuffer", "Send command to specified buffer",
                           "BUFFER COMMAND",
                           "BUFFER: buffer to send command to (plugin.buffer)\n"
                           "COMMAND: command (w/ args) to send",
-                          "%(buffers_plugins_names)", &tobuffer_cb, NULL);
+                          "%(buffers_plugins_names)", &tobuffer_cb, NULL, NULL);
 
     /* regex to remove color codes & whatnot */
     regex_strip_color = g_regex_new ("(\\x1f|\\x02|\\x03|\\x16|\\x0f)(?:\\d{1,2}(?:,\\d{1,2})?)?",

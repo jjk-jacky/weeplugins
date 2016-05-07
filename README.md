@@ -3,6 +3,8 @@
 weeplugins are plugins for the IRC client [WeeChat](http://www.weechat.org/
 "WeeChat, the extensible chat client.").
 
+They require at least WeeChat 1.5, for the updated C API.
+
 ## weenick: Provides support for common NickServ operations
 
 weenick allows you to define global and/or server-specific options to get
